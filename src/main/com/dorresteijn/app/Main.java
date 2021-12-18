@@ -1,73 +1,73 @@
 package main.com.dorresteijn.app;
 
+import java.io.*;
+import java.lang.*;
+
 import java.util.*;
 
-public class HeapSort {
+class MergeSort_impl {
 
-	// Function to sort arr[] of size n
-	// using bucket sort
-	public void sort(int arr[]) {
-		int n = arr.length;
+	static int toSort[];
+	int n;
 
-		// Build heap (rearrange array)
-		for (int i = n / 2 - 1; i >= 0; i--)
-			heapify(arr, n, i);
+	public static void main(String args[]) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		System.out.println("Enter n");
+		int n = Integer.parseInt(br.readLine());
+		int toSort[] = new int[n];
+		System.out.println("Enter some interger to sort");
+		for (int i = 0; i < n; i++) {
+			toSort[i] = Integer.parseInt(br.readLine());
+		}
+		MergeSort(toSort, n);
 
-		// One by one extract an element from heap
-		for (int i = n - 1; i > 0; i--) {
-			// Move current root to end
-			int temp = arr[0];
-			arr[0] = arr[i];
-			arr[i] = temp;
-
-			// call max heapify on the reduced heap
-			heapify(arr, i, 0);
+		System.out.println("sorted array");
+		for (int i  :  toSort){
+			System.out.println(i);
 		}
 	}
 
-	// To heapify a subtree rooted with node i which is
-	// an index in arr[]. n is size of heap
-	void heapify(int arr[], int n, int i) {
-		int largest = i; // Initialize largest as root
-		int l = 2 * i + 1; // left = 2*i + 1
-		int r = 2 * i + 2; // right = 2*i + 2
+	public static void MergeSort(int a[], int n) {
+		if (n <= 1)
+			return;
+		int mid = n / 2;
+		int left[] = new int[mid];
+		int right[] = new int[n - mid];
+		for (int i = 0; i < mid; i++)
+			left[i] = a[i];
+		for (int i = mid; i < n; i++)
+			right[i - mid] = a[i];
+		MergeSort(left, mid);
+		MergeSort(right, n - mid);
+		Merge(left, right, a);
+	}
 
-		// If left child is larger than root
-		if (l < n && arr[l] > arr[largest])
-			largest = l;
-
-		// If right child is larger than largest so far
-		if (r < n && arr[r] > arr[largest])
-			largest = r;
-
-		// If largest is not root
-		if (largest != i) {
-			int swap = arr[i];
-			arr[i] = arr[largest];
-			arr[largest] = swap;
-
-			// Recursively heapify the affected sub-tree
-			heapify(arr, n, largest);
+	public static void Merge(int left[], int right[], int a[]) {
+		int nL = left.length;
+		int nR = right.length;
+		int i, q, k;
+		i = q = k = 0;
+		while (i < nL && q < nR) {
+			
+			if (left[i] <= right[q]) {
+				a[k] = left[i];
+				i++;
+				k++;
+			} else {
+				a[k] = right[q];
+				q++;
+				k++;
+			}
 		}
-	}
-
-	/* A utility function to print array of size n */
-	static void printArray(int arr[]) {
-		int n = arr.length;
-		for (int i = 0; i < n; ++i)
-			System.out.print(arr[i] + " ");
-		System.out.println();
-	}
-
-	// Driver code
-	public static void main(String args[]) {
-		int arr[] = { 12, 11, 13, 5, 6, 7 };
-		int n = arr.length;
-
-		HeapSort ob = new HeapSort();
-		ob.sort(arr);
-
-		System.out.println("Sorted array is");
-		printArray(arr);
+		while (i < nL) {
+			a[k] = left[i];
+			i++;
+			k++;
+		}
+		while (q < nR) {
+			a[k] = right[q];
+			q++;
+			k++;
+		}
 	}
 }
